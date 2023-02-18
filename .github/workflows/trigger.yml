@@ -1,0 +1,23 @@
+---
+name: Trigger to another repo
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  trigger-to-another-repo:
+    runs-on: ubuntu-latest
+    steps:
+      - name: send
+        run: |
+          TOKEN=${{ secrets.PAT }}
+          ORG=${{ secrets.ORG }}
+          REPO=${{ secrets.TRIGGERREPO }}
+
+          ## curl
+          curl \
+            -X POST \
+            -H "Authorization: token $TOKEN" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/$ORG/$REPO/dispatches \
+            -d '{"event_type":"dispatch-test","client_payload":{"message": "Hello"}}'
